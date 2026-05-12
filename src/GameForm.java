@@ -14,6 +14,7 @@ public class GameForm extends JFrame {
     private JPanel buttonPanel;
     private JButton delete;
     private JButton testWin;
+    private JButton RESETButton;
 
     private JPanel a,aa,aaa,aaaa;
     private JPanel b,bb,bbb,bbbb;
@@ -49,7 +50,6 @@ public class GameForm extends JFrame {
     private JPanel h1,hh1,hhh1,hhhh1;
     private JPanel i1,ii1,iii1,iiii1;
     private JPanel j1,jj1,jjj1,jjjj1;
-
 
 
     JPanel[][] results = {
@@ -145,10 +145,14 @@ public class GameForm extends JFrame {
                 delete();
             }
         });
+        RESETButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {reset();}
+        });
     }
 
     public void addPeg(Color color){
-        if(pegNum < 4){
+        if(pegNum < 4 && turn < 10){
             guesses[turn][pegNum].setBackground(color);
             pegNum++;
         }
@@ -191,9 +195,16 @@ public class GameForm extends JFrame {
             for(int i = 0; i < result.size(); i++){
                 results[turn][i].setBackground(result.get(i));
             }
-            //check for win
+            //check for win amd for loss
             if(result.size() == 4 && result.get(3) == Color.green){
                 gameWon();
+            } else if(turn == 9){
+                for(int j = 0; j <= 9; j++){
+                    for(int i = 0; i < 4; i++){
+                        results[j][i].setBackground(Color.red);
+                        guesses[j][i].setBackground(Color.gray);
+                    }
+                }
             }
             turn++;
             pegNum = 0;
@@ -204,6 +215,16 @@ public class GameForm extends JFrame {
             guesses[turn][pegNum - 1].setBackground(Color.gray);
             pegNum--;
         }
+    }
+    public void reset(){
+        for(int j = 0; j < 10; j++){
+            for(int i = 0; i < 4; i++){
+                guesses[j][i].setBackground(Color.gray);
+                results[j][i].setBackground(Color.gray);
+                getAnswer();
+            }
+        }
+        turn = 0;
     }
     public void gameWon(){
         red.removeActionListener(red.getActionListeners()[0]);
